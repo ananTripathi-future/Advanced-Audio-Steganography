@@ -1,135 +1,221 @@
-🎧 Advanced Audio Steganography System
+<!-- Badges Row 1 — Core Tech -->
+<p align="center">
+  <img src="https://img.shields.io/badge/Steganography-LSB-8b5cf6?style=for-the-badge"/>
+  <img src="https://img.shields.io/badge/Encryption-AES--256-3b82f6?style=for-the-badge"/>
+  <img src="https://img.shields.io/badge/Python-3.x-06b6d4?style=for-the-badge"/>
+  <img src="https://img.shields.io/badge/GUI-Tkinter-10b981?style=for-the-badge"/>
+</p>
 
-A secure and intelligent communication system that hides secret messages inside audio files using LSB steganography, enhanced with AES encryption and email-based key sharing.
+<!-- Badges Row 2 — GitHub Stats -->
+<p align="center">
+  <img src="https://img.shields.io/github/stars/ananTripathi-future/audio-steganography?style=for-the-badge"/>
+  <img src="https://img.shields.io/github/forks/ananTripathi-future/audio-steganography?style=for-the-badge"/>
+  <img src="https://img.shields.io/github/issues/ananTripathi-future/audio-steganography?style=for-the-badge"/>
+  <img src="https://img.shields.io/github/license/ananTripathi-future/audio-steganography?style=for-the-badge"/>
+</p>
 
-🚀 Introduction
+<!-- Badges Row 3 — Activity -->
+<p align="center">
+  <img src="https://img.shields.io/github/last-commit/ananTripathi-future/audio-steganography?style=for-the-badge"/>
+  <img src="https://img.shields.io/github/repo-size/ananTripathi-future/audio-steganography?style=for-the-badge"/>
+  <img src="https://img.shields.io/github/languages/top/ananTripathi-future/audio-steganography?style=for-the-badge"/>
+</p>
 
-Traditional encryption protects data but exposes its presence. This project goes a step further by hiding encrypted messages inside audio files, making communication both secure and covert.
+---
 
-It combines:
+# 🎧 Advanced Audio Steganography System
 
-🔐 Cryptography (AES)
-🎵 Steganography (LSB)
-📧 Secure Key Sharing via Email
-📑 Table of Contents
-Features
-How It Works
-Tech Stack
-Project Structure
-Installation
-Usage
-Examples
-Security Layers
-Applications
-Limitations
-Future Enhancements
-Troubleshooting
-Contributors
-License
-🔐 Features
-🎵 Audio Steganography (LSB) – Hide messages inside .wav files
-🔒 AES Encryption (Fernet) – Strong encryption for hidden data
-👤 Identity Verification – Sender & receiver authentication
-📧 Email Key Sharing – Automatic password delivery via SMTP
-🖥️ User-Friendly GUI – Built using Tkinter
-🔄 MP3 Support – Converts .mp3 to .wav automatically
-🧠 How It Works
-🔽 Encoding Process
-User inputs:
-Secret message
-Password
-Sender & receiver email
-Message is encrypted using AES (Fernet)
-Encrypted data is converted into binary
-Binary data is embedded into audio using LSB
-Stego audio file is generated
-Password is securely sent via email
-🔼 Decoding Process
-Load stego audio file
-Extract binary data from LSB
-Decrypt using password
-Verify sender & receiver identity
-Display original message
-🏗️ Tech Stack
-Component	Technology Used
-Language	Python 3.x
-GUI	Tkinter
-Encryption	cryptography (Fernet/AES)
-Audio Processing	wave, pydub
-Email Service	smtplib (SMTP)
-Hashing	hashlib (SHA-256)
-📂 Project Structure
-Audio-Steganography/
-│── main.py
-│── encoder.py
-│── decoder.py
-│── encryption.py
-│── email_sender.py
-│── utils/
-│── assets/
-│── README.md
-⚙️ Installation
-git clone https://github.com/your-username/audio-steganography.git
+> *"Traditional encryption protects data but exposes its presence. This system makes your secrets invisible — and undetectable."*
+
+A secure Python application that hides AES-encrypted messages inside audio files using LSB steganography — combining cryptographic strength with plausible deniability.
+
+---
+
+## 🔐 Overview
+
+| Layer | Technology | Purpose |
+|-------|-----------|---------|
+| Encryption | AES-256 (Fernet) | Message confidentiality |
+| Steganography | LSB in WAV | Invisible data embedding |
+| Key Exchange | SMTP Email | Secure password delivery |
+| Authentication | SHA-256 Hashing | Identity verification |
+| Interface | Tkinter GUI | User-friendly interaction |
+
+---
+
+## 🏗️ Architecture — The Dual Layer
+
+┌─────────────────────────────────────────┐
+│       AUDIO STEGANOGRAPHY SYSTEM         │
+│                                          │
+Secret Msg ──►│  Layer 1: AES Encryption (Fernet)       │
+│    ├─ Password-based key derivation      │
+│    └─ AES-256 ciphertext output          │
+│                                          │
+Cover Audio ──►│  Layer 2: LSB Steganography            │
+│    ├─ Binary encode ciphertext           │
+│    └─ Embed in WAV sample LSBs           │
+│                                          │
+Recipients ──►│  Layer 3: Secure Key Delivery           │
+│    ├─ SMTP email with password           │
+│    └─ SHA-256 identity verification      │
+│                                          │
+│  ┌──────────────────────────────────┐   │
+│  │  MP3 → WAV Auto-Conversion        │   │
+│  │  Tkinter GUI (Encode / Decode)    │   │
+│  │  Sender & Receiver Authentication │   │
+│  └──────────────────────────────────┘   │
+└─────────────────────────────────────────┘
+
+
+---
+
+## 🔥 Features
+
+| Feature | Description |
+|---------|-------------|
+| 🎵 LSB Steganography | Hides messages inside `.wav` audio samples |
+| 🔒 AES-256 Encryption | Fernet symmetric encryption before embedding |
+| 📧 Email Key Sharing | Password delivered via SMTP automatically |
+| 👤 Identity Verification | SHA-256 based sender/receiver authentication |
+| 🖥️ Tkinter GUI | Clean graphical interface — no CLI needed |
+| 🔄 MP3 Support | Auto-converts `.mp3` → `.wav` via pydub |
+
+---
+
+## 🧠 How It Works
+
+### 🔽 Encoding Process
+[Secret Message] + [Password] + [Emails]
+│
+▼
+AES-256 Encrypt (Fernet)
+│
+▼
+Convert to Binary
+│
+▼
+Embed in Audio LSBs
+│
+▼
+[Stego Audio File] ──► Send password via Email
+
+
+### 🔼 Decoding Process
+[Stego Audio File] + [Password]
+│
+▼
+Extract Binary from LSBs
+│
+▼
+AES-256 Decrypt
+│
+▼
+SHA-256 Identity Verify
+│
+▼
+[Original Secret Message]
+
+
+---
+
+## 📁 Project Structure
+audio-steganography/
+├── main.py                  # Entry point — launches GUI
+├── encoder.py               # LSB embedding engine
+├── decoder.py               # LSB extraction engine
+├── encryption.py            # AES-256 (Fernet) encrypt/decrypt
+├── email_sender.py          # SMTP key delivery
+├── utils/                   # Helper functions
+├── assets/                  # Icons, sample audio files
+├── requirements.txt
+└── README.md
+
+
+---
+
+## ⚙️ Installation
+
+```bash
+git clone https://github.com/ananTripathi-future/audio-steganography.git
 cd audio-steganography
 pip install -r requirements.txt
-▶️ Usage
+```
+
+---
+
+## ▶️ Usage
+
+```bash
 python main.py
-Steps:
-Choose Encode or Decode
-Upload audio file
-Enter required details
-Click Process
-📸 Examples
+```
 
-Add screenshots of:
+**Steps:**
+1. Choose **Encode** or **Decode** mode
+2. Upload your audio file (`.wav` or `.mp3`)
+3. Enter message, password, and recipient email
+4. Click **Process**
+5. Retrieve your stego audio or decoded message
 
-GUI interface
-Encoding process
-Decoding results
-🔒 Security Layers
-✅ AES Encryption
-✅ LSB Steganography
-✅ SHA-256 Key Derivation
-✅ Identity Verification
-✅ Secure Email Key Exchange
-📊 Applications
-🔐 Secure Communication
-🪖 Military & Defense Messaging
-💧 Digital Watermarking
-📁 Confidential Data Sharing
-🧪 Cybersecurity Research
-⚠️ Limitations
-Works best with .wav files
-Large messages may increase file size
-Requires correct password for decoding
-🔮 Future Enhancements
-🎥 Video Steganography
-☁️ Cloud Integration
-🔐 Multi-layer Encryption
-🤖 AI-based detection resistance
-📱 Mobile Application
-🛠️ Troubleshooting
+---
 
-Issue: Audio not supported
-→ Convert to .wav format
+## 🔒 Security Layers
 
-Issue: Decryption failed
-→ Ensure correct password is used
+| Mechanism | Implementation | Threat Mitigated |
+|-----------|---------------|-----------------|
+| AES-256 Encryption | Fernet symmetric cipher | Plaintext interception |
+| LSB Steganography | Bit-level audio embedding | Detection of hidden data |
+| SHA-256 Hashing | Identity fingerprinting | Sender/receiver spoofing |
+| Email Key Exchange | SMTP delivery | Out-of-band key compromise |
+| Identity Verification | Pre-shared identity hash | Unauthorized decoding |
 
-Issue: Email not sent
-→ Check SMTP credentials and internet connection
+---
 
-👨‍💻 Contributors
-Anant Tripathi
-Cyber Security Intern, Supraja Technologies
-📜 License
+## 📊 Applications
 
-This project is intended for educational and research purposes only.
+- 🔐 **Secure Communication** — Send covert messages through audio files
+- 🪖 **Military / Intelligence** — Classified data with plausible deniability
+- 📁 **Confidential Data Sharing** — Corporate or legal sensitive content
+- 🧪 **Cybersecurity Research** — Steganography detection and analysis
 
-⭐ Support
+---
 
-If you found this project useful:
+## ⚠️ Limitations
 
-⭐ Star this repository
-🍴 Fork it
-🧠 Contribute improvements
+- Optimized for `.wav` format (`.mp3` auto-converted, quality may vary)
+- Very large messages noticeably increase output file size
+- Correct password required — no recovery mechanism
+- Stego audio should not be re-encoded or compressed post-embedding
+
+---
+
+## 🔮 Future Roadmap
+
+- 🎥 **Video Steganography** — Extend LSB hiding to video frames
+- ☁️ **Cloud Integration** — Store and share stego files via cloud APIs
+- 🤖 **AI Detection Resistance** — Adversarial embedding against steganalysis
+- 📱 **Mobile App** — Android/iOS interface for on-device use
+
+---
+
+## 👨‍💻 Contributor
+
+**Anant Tripathi**
+- GitHub: [@ananTripathi-future](https://github.com/ananTripathi-future)
+
+---
+
+## ⭐ Support
+
+If this project helped you:
+
+- ⭐ **Star** the repository
+- 🍴 **Fork** it and build on top
+- 🧠 **Contribute** via pull requests
+- 🐛 **Report issues** in the Issues tab
+
+---
+
+## 📝 License
+
+This project is provided for educational and research purposes.
