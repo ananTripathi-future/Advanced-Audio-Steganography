@@ -6,26 +6,16 @@
   <img src="https://img.shields.io/badge/GUI-Tkinter-10b981?style=for-the-badge"/>
 </p>
 
-<!-- Badges Row 2 — GitHub Stats -->
+<!-- Badges Row 2 — Organization -->
 <p align="center">
-  <img src="https://img.shields.io/github/stars/ananTripathi-future/audio-steganography?style=for-the-badge"/>
-  <img src="https://img.shields.io/github/forks/ananTripathi-future/audio-steganography?style=for-the-badge"/>
-  <img src="https://img.shields.io/github/issues/ananTripathi-future/audio-steganography?style=for-the-badge"/>
-  <img src="https://img.shields.io/github/license/ananTripathi-future/audio-steganography?style=for-the-badge"/>
-</p>
-
-<!-- Badges Row 3 — Activity -->
-<p align="center">
-  <img src="https://img.shields.io/github/last-commit/ananTripathi-future/audio-steganography?style=for-the-badge"/>
-  <img src="https://img.shields.io/github/repo-size/ananTripathi-future/audio-steganography?style=for-the-badge"/>
-  <img src="https://img.shields.io/github/languages/top/ananTripathi-future/audio-steganography?style=for-the-badge"/>
+  <img src="https://img.shields.io/badge/Organization-Suprajha%20Technologies-orange?style=for-the-badge"/>
+  <img src="https://img.shields.io/badge/Status-Active-success?style=for-the-badge"/>
 </p>
 
 ---
 
 # 🎧 Advanced Audio Steganography System
-
-> *"Traditional encryption protects data but exposes its presence. This system makes your secrets invisible — and undetectable."*
+### *Developed at Suprajha Technologies*
 
 A secure Python application that hides AES-encrypted messages inside audio files using LSB steganography — combining cryptographic strength with plausible deniability.
 
