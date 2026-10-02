@@ -121,10 +121,21 @@ document.addEventListener('DOMContentLoaded', () => {
     return {
       getFile: () => selectedFile,
       setFile: (file) => {
-        const dt = new DataTransfer();
-        dt.items.add(file);
-        input.files = dt.files;
-        handleFile(file);
+        try {
+          handleFile(file);
+        } catch (err) {
+          console.error('handleFile error:', err);
+        }
+
+        try {
+          if (typeof DataTransfer !== 'undefined') {
+            const dt = new DataTransfer();
+            dt.items.add(file);
+            input.files = dt.files;
+          }
+        } catch (e) {
+          console.warn('DataTransfer input.files assignment skipped (non-critical):', e);
+        }
       }
     };
   }
@@ -197,11 +208,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const btnGenDemo = document.getElementById('btn-generate-demo-audio');
   if (btnGenDemo) {
-    btnGenDemo.addEventListener('click', () => {
-      const blob = createSyntheticWav(3);
-      const file = new File([blob], 'demo_cover_audio.wav', { type: 'audio/wav' });
-      encodeUploader.setFile(file);
-      showToast('Generated 3-second PCM audio file for testing!', 'success');
+    btnGenDemo.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const origText = btnGenDemo.innerHTML;
+      btnGenDemo.innerHTML = '<span>⏳</span> Generating Demo Tone...';
+      btnGenDemo.disabled = true;
+
+      try {
+        const blob = createSyntheticWav(3);
+        const file = new File([blob], 'demo_cover_audio.wav', { type: 'audio/wav' });
+        encodeUploader.setFile(file);
+
+        btnGenDemo.innerHTML = '<span>✅</span> Demo Audio Ready (3s WAV)';
+        btnGenDemo.classList.add('btn-demo-loaded');
+        showToast('✓ Demo audio generated and selected as cover audio!', 'success');
+
+        // Play short sound preview so user immediately perceives audio is loaded
+        const previewPlayer = document.getElementById('encode-audio-preview');
+        if (previewPlayer) {
+          previewPlayer.currentTime = 0;
+          previewPlayer.play().catch(() => {});
+        }
+      } catch (err) {
+        console.error('Demo audio generation error:', err);
+        showToast('Failed to generate demo audio: ' + err.message, 'error');
+        btnGenDemo.innerHTML = origText;
+      } finally {
+        setTimeout(() => {
+          btnGenDemo.disabled = false;
+        }, 600);
+      }
     });
   }
 
