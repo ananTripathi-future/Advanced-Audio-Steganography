@@ -2,12 +2,13 @@ import io
 import wave
 import hashlib
 import base64
+import traceback
 from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 from cryptography.fernet import Fernet, InvalidToken
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 DELIMITER = b"====EOF===="
 
@@ -18,6 +19,7 @@ def generate_key_from_password(password: str) -> bytes:
 @app.route("/", methods=["GET"])
 @app.route("/api", methods=["GET"])
 @app.route("/api/health", methods=["GET"])
+@app.route("/health", methods=["GET"])
 def health():
     return jsonify({
         "status": "online",
@@ -29,6 +31,7 @@ def health():
     })
 
 @app.route("/api/info", methods=["GET"])
+@app.route("/info", methods=["GET"])
 def project_info():
     return jsonify({
         "project": {
@@ -60,11 +63,15 @@ def project_info():
         ]
     })
 
-@app.route("/api/embed", methods=["POST"])
+@app.route("/api/embed", methods=["POST", "OPTIONS"])
+@app.route("/embed", methods=["POST", "OPTIONS"])
 def embed():
+    if request.method == "OPTIONS":
+        return "", 200
+
     try:
         if "audio" not in request.files:
-            return jsonify({"success": False, "error": "Missing audio file (.wav format required)"}), 400
+            return jsonify({"success": False, "error": "No audio file provided in request."}), 400
 
         audio_file = request.files["audio"]
         message = request.form.get("message", "").strip()
@@ -73,20 +80,27 @@ def embed():
         receiver = request.form.get("receiver", "").strip()
 
         if not message:
-            return jsonify({"success": False, "error": "Secret message cannot be empty"}), 400
+            return jsonify({"success": False, "error": "Secret message cannot be empty."}), 400
         if not password:
-            return jsonify({"success": False, "error": "Password is required"}), 400
+            return jsonify({"success": False, "error": "Password is required."}), 400
         if not sender or not receiver:
-            return jsonify({"success": False, "error": "Sender and receiver email identities are required"}), 400
+            return jsonify({"success": False, "error": "Both Sender and Receiver Gmail addresses are required."}), 400
 
         # Read audio file into memory
         audio_bytes = audio_file.read()
+        if not audio_bytes:
+            return jsonify({"success": False, "error": "Uploaded audio file is empty."}), 400
+
+        # Parse WAV frames
         try:
             with wave.open(io.BytesIO(audio_bytes), "rb") as song:
                 params = song.getparams()
                 frames = bytearray(list(song.readframes(song.getnframes())))
         except Exception as e:
-            return jsonify({"success": False, "error": f"Invalid WAV file: {str(e)}. Please ensure standard uncompressed PCM WAV is provided."}), 400
+            return jsonify({
+                "success": False,
+                "error": f"Audio parsing error: {str(e)}. Please ensure standard uncompressed PCM WAV is provided."
+            }), 400
 
         # 1. Encrypt message with Fernet using SHA-256 derived key
         key = generate_key_from_password(password)
@@ -102,7 +116,7 @@ def embed():
         if len(binary_data) > len(frames):
             return jsonify({
                 "success": False,
-                "error": f"Audio file is too small! Capacity is {len(frames) // 8} bytes, but payload requires {len(binary_data) // 8} bytes. Please use a longer audio file."
+                "error": f"Audio file is too short! Capacity is {len(frames) // 8} bytes, but secret payload requires {len(binary_data) // 8} bytes. Please select a longer audio file."
             }), 400
 
         # 4. Inject bits into LSB of audio frames
@@ -128,13 +142,18 @@ def embed():
         )
 
     except Exception as e:
-        return jsonify({"success": False, "error": f"Encoding failed: {str(e)}"}), 500
+        traceback.print_exc()
+        return jsonify({"success": False, "error": f"Encoding failure: {str(e)}"}), 500
 
-@app.route("/api/extract", methods=["POST"])
+@app.route("/api/extract", methods=["POST", "OPTIONS"])
+@app.route("/extract", methods=["POST", "OPTIONS"])
 def extract():
+    if request.method == "OPTIONS":
+        return "", 200
+
     try:
         if "audio" not in request.files:
-            return jsonify({"success": False, "error": "Missing encoded audio file"}), 400
+            return jsonify({"success": False, "error": "Missing encoded audio file."}), 400
 
         audio_file = request.files["audio"]
         password = request.form.get("password", "")
@@ -142,9 +161,9 @@ def extract():
         receiver_verify = request.form.get("receiver", "").strip()
 
         if not password:
-            return jsonify({"success": False, "error": "Password is required"}), 400
+            return jsonify({"success": False, "error": "Password is required."}), 400
         if not sender_verify or not receiver_verify:
-            return jsonify({"success": False, "error": "Verification Sender and Receiver emails are required"}), 400
+            return jsonify({"success": False, "error": "Verification Sender and Receiver emails are required."}), 400
 
         audio_bytes = audio_file.read()
         try:
@@ -183,7 +202,7 @@ def extract():
         if not found_delimiter:
             return jsonify({
                 "success": False,
-                "error": "No hidden data or unrecognized audio format found in this file."
+                "error": "No hidden steganography data found in this audio file."
             }), 400
 
         encrypted_data = bytes(extracted_bytes[:delim_idx])
@@ -197,7 +216,7 @@ def extract():
         except InvalidToken:
             return jsonify({
                 "success": False,
-                "error": "Incorrect password or corrupted steganography data!"
+                "error": "Decryption failed: Incorrect password or corrupted data."
             }), 401
 
         # 4. Identity Handshake Verification
@@ -227,11 +246,12 @@ def extract():
                 "success": True,
                 "message": decrypted_payload,
                 "handshake_verified": False,
-                "status": "Decryption key matched! Message revealed (No Handshake header)."
+                "status": "Decryption key matched! Message revealed (Legacy format)."
             })
 
     except Exception as e:
-        return jsonify({"success": False, "error": f"Extraction process error: {str(e)}"}), 500
+        traceback.print_exc()
+        return jsonify({"success": False, "error": f"Extraction failure: {str(e)}"}), 500
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
