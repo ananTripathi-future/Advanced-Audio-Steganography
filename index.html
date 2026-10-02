@@ -123,6 +123,24 @@
               <input type="email" id="encode-receiver" class="form-input" placeholder="receiver@gmail.com" required>
             </div>
           </div>
+
+          <!-- Step 6: Sender Google App Password (Optional) -->
+          <div class="form-group">
+            <div class="label-with-badge">
+              <label for="encode-app-pwd" class="form-label">
+                <span class="step-num">6</span> Sender Google App Password
+              </label>
+              <span class="badge-optional">Optional for Automated Email</span>
+            </div>
+            <div class="input-with-action">
+              <input type="password" id="encode-app-pwd" class="form-input" placeholder="16-letter App Password (e.g. abcd efgh ijkl mnop)">
+              <button type="button" class="btn-toggle-pwd" data-target="encode-app-pwd">👁️</button>
+            </div>
+            <p class="form-hint">
+              Required for automated Gmail SMTP email dispatch. Generate at <a href="https://myaccount.google.com/apppasswords" target="_blank" class="link">Google App Passwords</a>. If left blank, you can use the 1-click Gmail composer button after encoding!
+            </p>
+          </div>
+
           <p class="form-hint-info">🔒 <strong>Two-Way Handshake Protection:</strong> These email identities will be cryptographically locked inside the ciphertext. Extraction will be refused if receiver does not verify both addresses.</p>
 
           <!-- Submit Button -->
@@ -149,7 +167,33 @@
               <span class="btn-icon">📥</span> Download Encoded WAV Audio
             </a>
           </div>
-        </div>
+
+          <!-- Out-of-Band Key Distribution Card -->
+          <div class="email-dispatch-card" id="email-dispatch-box">
+            <div class="dispatch-header">
+              <span class="dispatch-icon">📧</span>
+              <h4>Out-of-Band Key Delivery to Receiver</h4>
+            </div>
+            <p id="email-status-text" class="dispatch-status">Preparing decryption key...</p>
+            <div class="key-summary-box">
+              <div class="key-summary-item">
+                <span class="lbl">Decryption Password:</span>
+                <span class="val font-mono" id="disp-password">******</span>
+              </div>
+              <div class="key-summary-item">
+                <span class="lbl">Receiver Gmail:</span>
+                <span class="val font-mono" id="disp-receiver">receiver@gmail.com</span>
+              </div>
+            </div>
+            <div class="dispatch-actions">
+              <a id="btn-open-gmail" target="_blank" class="btn-sm btn-action">
+                ✉️ Send via Gmail (1-Click Pre-filled)
+              </a>
+              <button type="button" id="btn-copy-email-text" class="btn-sm btn-action">
+                📋 Copy Password & Verification Instructions
+              </button>
+            </div>
+          </div>
       </section>
 
       <!-- TAB 2: DECODE / EXTRACT -->

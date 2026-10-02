@@ -621,6 +621,108 @@ body {
   border: 1px solid rgba(56, 189, 248, 0.2);
 }
 
+/* Email Out-of-Band Dispatch Card */
+.label-with-badge {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.badge-optional {
+  font-size: 0.7rem;
+  font-family: var(--font-mono);
+  background: rgba(148, 163, 184, 0.12);
+  color: #94a3b8;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.email-dispatch-card {
+  background: var(--bg-surface);
+  border: 1px solid rgba(58, 141, 255, 0.3);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  margin-top: 20px;
+}
+
+.dispatch-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.dispatch-header h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.dispatch-icon {
+  font-size: 1.1rem;
+}
+
+.dispatch-status {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.key-summary-box {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.key-summary-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+}
+
+.key-summary-item .lbl {
+  color: var(--text-muted);
+}
+
+.key-summary-item .val {
+  color: #38bdf8;
+  font-weight: 600;
+}
+
+.dispatch-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.btn-action {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-main);
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: var(--transition);
+}
+
+.btn-action:hover {
+  border-color: var(--primary);
+  color: #fff;
+  background: rgba(58, 141, 255, 0.15);
+}
+
 /* Architecture Tab */
 .architecture-grid {
   display: grid;

@@ -3,6 +3,9 @@ import wave
 import hashlib
 import base64
 import traceback
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 from cryptography.fernet import Fernet, InvalidToken
@@ -252,6 +255,74 @@ def extract():
     except Exception as e:
         traceback.print_exc()
         return jsonify({"success": False, "error": f"Extraction failure: {str(e)}"}), 500
+
+@app.route("/api/send-email", methods=["POST", "OPTIONS"])
+@app.route("/send-email", methods=["POST", "OPTIONS"])
+def send_email():
+    if request.method == "OPTIONS":
+        return "", 200
+
+    data = request.get_json(silent=True) or request.form
+    sender = data.get("sender", "").strip()
+    app_pwd = data.get("app_password", "").strip()
+    receiver = data.get("receiver", "").strip()
+    decryption_pwd = data.get("password", "")
+
+    if not sender or not app_pwd or not receiver or not decryption_pwd:
+        return jsonify({
+            "success": False,
+            "error": "Sender email, Google App Password, receiver email, and decryption password are all required."
+        }), 400
+
+    try:
+        msg = MIMEMultipart()
+        msg['From'] = sender
+        msg['To'] = receiver
+        msg['Subject'] = "Audio Steganography - Secure Handshake & Decryption Key"
+
+        body = f"""Hello,
+
+You have received an encoded audio file via the Advanced Audio Steganography System.
+
+To decrypt the hidden message and securely verify the handshake, use this exact password:
+{decryption_pwd}
+
+Verification Identity Details:
+Sender Gmail: {sender}
+Receiver Gmail: {receiver}
+
+Steps to Extract:
+1. Open the Audio Steganography app: https://advanced-audio-steganography.vercel.app
+2. Switch to the 'Extract Message' tab
+3. Upload the encoded audio file (.wav)
+4. Enter the password above
+5. Enter {sender} into the 'Verify Sender Gmail' field
+6. Enter {receiver} into the 'Verify Receiver Gmail' field
+7. Click 'Extract & Decrypt Secret'
+
+- Sent securely via Advanced Audio Steganography System (Supraja Technologies)
+"""
+        msg.attach(MIMEText(body, 'plain'))
+
+        # Connect to Gmail SMTP with a 10s timeout
+        server = smtplib.SMTP('smtp.gmail.com', 587, timeout=10)
+        server.starttls()
+        server.login(sender, app_pwd)
+        server.send_message(msg)
+        server.quit()
+
+        return jsonify({
+            "success": True,
+            "message": f"Decryption key and handshake details securely emailed to {receiver}!"
+        })
+
+    except smtplib.SMTPAuthenticationError:
+        return jsonify({
+            "success": False,
+            "error": "Gmail authentication failed. Please ensure you are using a 16-letter Google App Password (not your standard Google account password). Generate one at: myaccount.google.com/apppasswords"
+        }), 401
+    except Exception as e:
+        return jsonify({"success": False, "error": f"Failed to send email: {str(e)}"}), 500
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

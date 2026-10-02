@@ -580,10 +580,93 @@ document.addEventListener('DOMContentLoaded', () => {
       encodeResult.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       showToast('Message encrypted and concealed into audio successfully!', 'success');
 
-    } catch (err) {
-      console.error('Steganography error:', err);
-      showToast(err.message || 'Failed to embed data into audio.', 'error');
-    } finally {
+      // --- Out-of-Band Key Delivery & Email Dispatch ---
+      const appPwd = (document.getElementById('encode-app-pwd')?.value || '').trim();
+      const dispPwd = document.getElementById('disp-password');
+      const dispRecv = document.getElementById('disp-receiver');
+      const emailStatusText = document.getElementById('email-status-text');
+      const btnOpenGmail = document.getElementById('btn-open-gmail');
+      const btnCopyEmail = document.getElementById('btn-copy-email-text');
+
+      if (dispPwd) dispPwd.textContent = password;
+      if (dispRecv) dispRecv.textContent = receiver;
+
+      const emailSubject = "Audio Steganography - Secure Handshake & Decryption Key";
+      const emailBody = `Hello,
+
+You have received an encoded audio file via the Advanced Audio Steganography System.
+
+To decrypt the hidden message and securely verify the handshake, use this exact password:
+${password}
+
+Verification Identity Details:
+Sender Gmail: ${sender}
+Receiver Gmail: ${receiver}
+
+Steps to Extract:
+1. Open the Audio Steganography Web App: https://advanced-audio-steganography.vercel.app
+2. Switch to the 'Extract Message' tab
+3. Upload the encoded audio file (.wav)
+4. Enter the password above: ${password}
+5. Enter ${sender} into the 'Verify Sender Gmail' field
+6. Enter ${receiver} into the 'Verify Receiver Gmail' field
+7. Click 'Extract & Decrypt Secret'
+
+- Sent securely via Advanced Audio Steganography System (Supraja Technologies)`;
+
+      // Set up 1-Click Gmail composer and mailto links
+      if (btnOpenGmail) {
+        btnOpenGmail.href = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(receiver)}&su=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+      }
+
+      if (btnCopyEmail) {
+        btnCopyEmail.onclick = () => {
+          navigator.clipboard.writeText(emailBody).then(() => {
+            showToast('Decryption details copied to clipboard!', 'success');
+          });
+        };
+      }
+
+      // Automated SMTP Dispatch if App Password provided
+      if (appPwd) {
+        if (emailStatusText) {
+          emailStatusText.innerHTML = `<span>⏳</span> Connecting to Gmail SMTP to email key to <strong>${receiver}</strong>...`;
+        }
+        fetch('/api/send-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            sender,
+            app_password: appPwd,
+            receiver,
+            password
+          })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.success) {
+            if (emailStatusText) {
+              emailStatusText.innerHTML = `✅ <strong style="color:#10b981;">Email dispatched to ${receiver}!</strong> Decryption password and handshake instructions delivered.`;
+            }
+            showToast(`Password successfully emailed to ${receiver}!`, 'success');
+          } else {
+            const errStr = data?.error || 'Authentication failed.';
+            if (emailStatusText) {
+              emailStatusText.innerHTML = `⚠️ <span style="color:#f59e0b;">SMTP Notice:</span> ${errStr} <br>Use the <strong>1-Click Gmail Button</strong> below to send directly.`;
+            }
+            showToast(errStr, 'error');
+          }
+        })
+        .catch(err => {
+          if (emailStatusText) {
+            emailStatusText.innerHTML = `ℹ️ Decryption key ready. Click <strong>'Send via Gmail'</strong> or <strong>'Copy'</strong> below to share with <strong>${receiver}</strong>.`;
+          }
+        });
+      } else {
+        if (emailStatusText) {
+          emailStatusText.innerHTML = `ℹ️ Decryption key ready. Click <strong>'Send via Gmail'</strong> or <strong>'Copy Password'</strong> below to dispatch details to <strong>${receiver}</strong>.`;
+        }
+      }
       btnEncodeSubmit.disabled = false;
       btnEncodeSubmit.innerHTML = '<span class="btn-icon">⚡</span> Embed & Download Encoded Audio';
     }
