@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advanced Audio Steganography System | Supraja Technologies</title>
+  <meta name="description" content="A military-grade audio steganography system combining LSB bit embedding, AES cryptography, and a two-way identity handshake protocol. Developed at Supraja Technologies.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="stars"></div>
+  <div class="grid-overlay"></div>
+
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-logo-wrap">
+        <img src="lock_key.png" alt="Lock and Key Logo" class="app-logo">
+      </div>
+      <div class="header-title-wrap">
+        <div class="badge-row">
+          <span class="badge badge-primary">LSB Steganography</span>
+          <span class="badge badge-secondary">AES-256 Fernet</span>
+          <span class="badge badge-accent">Identity Handshake</span>
+          <span class="badge badge-org">Supraja Technologies</span>
+        </div>
+        <h1 class="main-title">Advanced Audio Steganography System</h1>
+        <p class="subtitle">Military-Grade Dual-Layer Concealment & Cryptographic Verification</p>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+      <button class="tab-btn active" data-tab="tab-encode">
+        <span class="icon">🔒</span> Hide Message (Encode)
+      </button>
+      <button class="tab-btn" data-tab="tab-decode">
+        <span class="icon">🔓</span> Extract Message (Decode)
+      </button>
+      <button class="tab-btn" data-tab="tab-architecture">
+        <span class="icon">🛡️</span> Security Architecture
+      </button>
+      <button class="tab-btn" data-tab="tab-info">
+        <span class="icon">📋</span> Project Information
+      </button>
+    </nav>
+
+    <!-- Main Content Panels -->
+    <main class="content-wrapper">
+      
+      <!-- TAB 1: ENCODE / HIDE -->
+      <section id="tab-encode" class="tab-panel active">
+        <div class="panel-header">
+          <h2>Hide Secret Data in Audio</h2>
+          <p>Embeds your AES-encrypted ciphertext and identity handshake directly into cover audio samples.</p>
+        </div>
+
+        <form id="form-encode" class="steg-form">
+          <!-- Step 1: Audio Selection -->
+          <div class="form-group">
+            <label class="form-label">
+              <span class="step-num">1</span> Select Cover Audio (.wav / .mp3)
+            </label>
+            <div class="drop-zone" id="drop-zone-encode">
+              <div class="drop-zone-content">
+                <span class="drop-icon">🎵</span>
+                <p class="drop-text">Drag & drop your audio file here or <span class="highlight">browse</span></p>
+                <p class="drop-hint">Supports PCM 16-bit WAV (ideal) and MP3 (auto-converted)</p>
+              </div>
+              <input type="file" id="encode-audio-input" accept=".wav,.mp3,audio/wav,audio/mpeg" class="file-input">
+            </div>
+            <div class="file-status-row" id="encode-file-status" style="display: none;">
+              <span class="file-name" id="encode-file-name">filename.wav</span>
+              <span class="file-size" id="encode-file-size">0 KB</span>
+              <button type="button" class="btn-sm btn-clear" id="encode-file-clear">✕ Remove</button>
+            </div>
+            <div class="sample-audio-row">
+              <span>Don't have an audio file?</span>
+              <button type="button" class="btn-link" id="btn-generate-demo-audio">⚡ Generate 3-Sec Demo WAV</button>
+            </div>
+            <div class="audio-player-container" id="encode-player-container" style="display: none;">
+              <label class="sub-label">Cover Audio Preview:</label>
+              <audio id="encode-audio-preview" controls class="audio-player"></audio>
+            </div>
+          </div>
+
+          <!-- Step 2: Secret Message -->
+          <div class="form-group">
+            <label for="encode-message" class="form-label">
+              <span class="step-num">2</span> Secret Message to Conceal
+            </label>
+            <textarea id="encode-message" rows="3" class="form-input form-textarea" placeholder="Enter the confidential message here..." required></textarea>
+            <div class="char-count"><span id="msg-char-count">0</span> characters</div>
+          </div>
+
+          <!-- Step 3: Password -->
+          <div class="form-group">
+            <label for="encode-password" class="form-label">
+              <span class="step-num">3</span> Cryptographic Password
+            </label>
+            <div class="input-with-action">
+              <input type="password" id="encode-password" class="form-input" placeholder="Secret passphrase for SHA-256 key derivation" required>
+              <button type="button" class="btn-toggle-pwd" data-target="encode-password">👁️</button>
+            </div>
+            <p class="form-hint">Used to derive a 256-bit AES encryption key. Receiver must know this exact password.</p>
+          </div>
+
+          <!-- Step 4 & 5: Sender & Receiver Identities -->
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="encode-sender" class="form-label">
+                <span class="step-num">4</span> Sender Gmail Identity
+              </label>
+              <input type="email" id="encode-sender" class="form-input" placeholder="sender@gmail.com" required>
+            </div>
+            <div class="form-group">
+              <label for="encode-receiver" class="form-label">
+                <span class="step-num">5</span> Receiver Gmail Identity
+              </label>
+              <input type="email" id="encode-receiver" class="form-input" placeholder="receiver@gmail.com" required>
+            </div>
+          </div>
+          <p class="form-hint-info">🔒 <strong>Two-Way Handshake Protection:</strong> These email identities will be cryptographically locked inside the ciphertext. Extraction will be refused if receiver does not verify both addresses.</p>
+
+          <!-- Submit Button -->
+          <div class="action-row">
+            <button type="submit" class="btn-primary" id="btn-encode-submit">
+              <span class="btn-icon">⚡</span> Embed & Download Encoded Audio
+            </button>
+          </div>
+        </form>
+
+        <!-- Encode Output Results -->
+        <div class="result-box" id="encode-result" style="display: none;">
+          <div class="result-header">
+            <span class="result-badge success">✓ Steganography Complete</span>
+            <h3>Data Concealed Successfully</h3>
+          </div>
+          <p id="encode-result-desc">The message has been encrypted with AES-256 and woven into the audio frames.</p>
+          <div class="audio-player-container">
+            <label class="sub-label">Listen to Stego Audio (Unchanged Acoustic Quality):</label>
+            <audio id="stego-audio-player" controls class="audio-player"></audio>
+          </div>
+          <div class="action-row mt-3">
+            <a id="btn-download-stego" class="btn-secondary" download="encoded_audio.wav">
+              <span class="btn-icon">📥</span> Download Encoded WAV Audio
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: DECODE / EXTRACT -->
+      <section id="tab-decode" class="tab-panel">
+        <div class="panel-header">
+          <h2>Extract & Decrypt Hidden Message</h2>
+          <p>Extracts bits from audio LSBs, verifies the two-way identity handshake, and decrypts the secret payload.</p>
+        </div>
+
+        <form id="form-decode" class="steg-form">
+          <!-- Step 1: Encoded Audio Selection -->
+          <div class="form-group">
+            <label class="form-label">
+              <span class="step-num">1</span> Select Encoded Audio File (.wav)
+            </label>
+            <div class="drop-zone" id="drop-zone-decode">
+              <div class="drop-zone-content">
+                <span class="drop-icon">🎧</span>
+                <p class="drop-text">Drag & drop your encoded WAV file here or <span class="highlight">browse</span></p>
+                <p class="drop-hint">Must be the file generated by the Audio Steganography System</p>
+              </div>
+              <input type="file" id="decode-audio-input" accept=".wav,audio/wav" class="file-input">
+            </div>
+            <div class="file-status-row" id="decode-file-status" style="display: none;">
+              <span class="file-name" id="decode-file-name">encoded_audio.wav</span>
+              <span class="file-size" id="decode-file-size">0 KB</span>
+              <button type="button" class="btn-sm btn-clear" id="decode-file-clear">✕ Remove</button>
+            </div>
+          </div>
+
+          <!-- Step 2: Decryption Password -->
+          <div class="form-group">
+            <label for="decode-password" class="form-label">
+              <span class="step-num">2</span> Decryption Password
+            </label>
+            <div class="input-with-action">
+              <input type="password" id="decode-password" class="form-input" placeholder="Enter the secret password" required>
+              <button type="button" class="btn-toggle-pwd" data-target="decode-password">👁️</button>
+            </div>
+          </div>
+
+          <!-- Step 3 & 4: Handshake Verification -->
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="decode-sender" class="form-label">
+                <span class="step-num">3</span> Verify Sender Gmail
+              </label>
+              <input type="email" id="decode-sender" class="form-input" placeholder="sender@gmail.com" required>
+            </div>
+            <div class="form-group">
+              <label for="decode-receiver" class="form-label">
+                <span class="step-num">4</span> Verify Receiver Gmail
+              </label>
+              <input type="email" id="decode-receiver" class="form-input" placeholder="receiver@gmail.com" required>
+            </div>
+          </div>
+
+          <div class="action-row">
+            <button type="submit" class="btn-primary" id="btn-decode-submit">
+              <span class="btn-icon">🔍</span> Extract & Decrypt Secret
+            </button>
+          </div>
+        </form>
+
+        <!-- Decode Output Result -->
+        <div class="result-box" id="decode-result" style="display: none;">
+          <div class="result-header">
+            <span class="result-badge success" id="decode-badge">✓ Handshake Verified</span>
+            <h3 id="decode-status-title">Decryption Successful</h3>
+          </div>
+          <div class="handshake-card">
+            <div class="handshake-item">
+              <span class="label">Sender Identity:</span>
+              <span class="value" id="res-sender">-</span>
+            </div>
+            <div class="handshake-item">
+              <span class="label">Receiver Identity:</span>
+              <span class="value" id="res-receiver">-</span>
+            </div>
+            <div class="handshake-item">
+              <span class="label">Handshake Status:</span>
+              <span class="value highlight-green" id="res-handshake">VERIFIED</span>
+            </div>
+          </div>
+          <div class="extracted-message-box">
+            <label class="sub-label">Revealed Secret Message:</label>
+            <div class="message-content" id="res-message"></div>
+            <button type="button" class="btn-sm btn-copy" id="btn-copy-msg">📋 Copy Message</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: ARCHITECTURE -->
+      <section id="tab-architecture" class="tab-panel">
+        <div class="panel-header">
+          <h2>Dual-Layer Security Architecture</h2>
+          <p>How the system achieves both plausible deniability and cryptographic integrity.</p>
+        </div>
+
+        <div class="architecture-grid">
+          <div class="arch-card">
+            <div class="arch-badge">Layer 1</div>
+            <h3>Cryptographic Confidentiality</h3>
+            <p>The plaintext is encrypted with <strong>Fernet (AES-128 in CBC mode with HMAC-SHA256)</strong>. The symmetric key is derived from the user's password using <strong>SHA-256</strong> hashing, ensuring brute-force resistance.</p>
+            <div class="tech-tag">AES-128 / 256 CBC</div>
+            <div class="tech-tag">HMAC-SHA256</div>
+          </div>
+
+          <div class="arch-card">
+            <div class="arch-badge">Layer 2</div>
+            <h3>Identity Handshake Binding</h3>
+            <p>Before encryption, the payload is structured as <code>Sender||Receiver||Message</code>. Decryption requires exact proof of both sender and receiver identities, preventing unauthorized extraction by third parties.</p>
+            <div class="tech-tag">Zero-Trust Handshake</div>
+            <div class="tech-tag">Man-in-the-Middle Defense</div>
+          </div>
+
+          <div class="arch-card">
+            <div class="arch-badge">Layer 3</div>
+            <h3>LSB Audio Steganography</h3>
+            <p>The encrypted bitstream is embedded into the <strong>Least Significant Bit (LSB)</strong> of cover audio sample bytes. Modifying the 8th bit introduces a minute amplitude difference (< 0.39%) completely imperceptible to the human auditory system.</p>
+            <div class="tech-tag">Imperceptible LSB</div>
+            <div class="tech-tag">Plausible Deniability</div>
+          </div>
+        </div>
+
+        <div class="flow-diagram-container">
+          <h3>Data Processing Pipeline</h3>
+          <div class="pipeline-flow">
+            <div class="pipe-step">
+              <span class="pipe-num">01</span>
+              <h4>Payload Formation</h4>
+              <p><code>Sender + Receiver + Plaintext</code></p>
+            </div>
+            <div class="pipe-arrow">➔</div>
+            <div class="pipe-step">
+              <span class="pipe-num">02</span>
+              <h4>AES Encryption</h4>
+              <p>Fernet Ciphertext Output</p>
+            </div>
+            <div class="pipe-arrow">➔</div>
+            <div class="pipe-step">
+              <span class="pipe-num">03</span>
+              <h4>LSB Insertion</h4>
+              <p>Audio Sample Byte Modification</p>
+            </div>
+            <div class="pipe-arrow">➔</div>
+            <div class="pipe-step">
+              <span class="pipe-num">04</span>
+              <h4>Stego File</h4>
+              <p>Inaudible Carrier Output</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: PROJECT INFO -->
+      <section id="tab-info" class="tab-panel">
+        <div class="panel-header">
+          <h2>Project & Internship Information</h2>
+          <p>Official details of the cybersecurity project developed for Supraja Technologies.</p>
+        </div>
+
+        <div class="info-tables-container">
+          <!-- Project Details -->
+          <div class="table-wrap">
+            <h3 class="table-title">📋 Project Details</h3>
+            <table class="styled-table">
+              <thead>
+                <tr>
+                  <th>Field</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Project Name</td>
+                  <td><strong>Audio Steganography using LSB</strong></td>
+                </tr>
+                <tr>
+                  <td>Project Description</td>
+                  <td>Hiding Message with Encryption in Audio using LSB Algorithm</td>
+                </tr>
+                <tr>
+                  <td>Start Date</td>
+                  <td>22/03/2026</td>
+                </tr>
+                <tr>
+                  <td>End Date</td>
+                  <td>01/04/2026</td>
+                </tr>
+                <tr>
+                  <td>Project Status</td>
+                  <td><span class="badge-status-completed">Completed</span></td>
+                </tr>
+                <tr>
+                  <td>Deployment</td>
+                  <td>Vercel Cloud (Web) + Python Desktop (Tkinter)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Developer Details -->
+          <div class="table-wrap">
+            <h3 class="table-title">👨‍💻 Developer Details</h3>
+            <table class="styled-table">
+              <thead>
+                <tr>
+                  <th>Field</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Lead Developer</td>
+                  <td><strong>Anant Tripathi</strong></td>
+                </tr>
+                <tr>
+                  <td>Employee ID</td>
+                  <td><code>ST#IS#8964</code></td>
+                </tr>
+                <tr>
+                  <td>Email</td>
+                  <td><a href="mailto:omanant.tripathi@gmail.com" class="link">omanant.tripathi@gmail.com</a></td>
+                </tr>
+                <tr>
+                  <td>GitHub</td>
+                  <td><a href="https://github.com/ananTripathi-future" target="_blank" class="link">@ananTripathi-future</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Company Details -->
+          <div class="table-wrap">
+            <h3 class="table-title">🏢 Organization Details</h3>
+            <table class="styled-table">
+              <thead>
+                <tr>
+                  <th>Field</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Organization</td>
+                  <td><strong>Supraja Technologies</strong></td>
+                </tr>
+                <tr>
+                  <td>Domain</td>
+                  <td>Cyber Security Internship</td>
+                </tr>
+                <tr>
+                  <td>Contact</td>
+                  <td><a href="mailto:contact@suprajatechnologies.com" class="link">contact@suprajatechnologies.com</a></td>
+                </tr>
+                <tr>
+                  <td>Mission</td>
+                  <td>Protecting organizations from cyber fraud & covert threat vectors</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>© 2026 <strong>Advanced Audio Steganography System</strong> | Developed by <strong>Anant Tripathi</strong> at <strong>Supraja Technologies</strong></p>
+      <div class="footer-links">
+        <a href="https://github.com/ananTripathi-future/Advanced-Audio-Steganography" target="_blank">GitHub Repository</a>
+        <span>•</span>
+        <a href="#tab-architecture" class="tab-link" data-tab="tab-architecture">Security Specs</a>
+        <span>•</span>
+        <a href="#tab-info" class="tab-link" data-tab="tab-info">Internship Report</a>
+      </div>
+    </footer>
+  </div>
+
+  <div id="toast-container" class="toast-container"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
