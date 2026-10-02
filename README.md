@@ -3,7 +3,9 @@
   <img src="https://img.shields.io/badge/Steganography-LSB-8b5cf6?style=for-the-badge"/>
   <img src="https://img.shields.io/badge/Encryption-AES--256-3b82f6?style=for-the-badge"/>
   <img src="https://img.shields.io/badge/Python-3.x-06b6d4?style=for-the-badge"/>
-  <img src="https://img.shields.io/badge/Deployment-Vercel%20Serverless-000000?style=for-the-badge&logo=vercel&logoColor=white"/>
+  <a href="https://advanced-audio-steganography.vercel.app" target="_blank">
+    <img src="https://img.shields.io/badge/Live%20Demo-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white"/>
+  </a>
   <img src="https://img.shields.io/badge/GUI-Tkinter%20%26%20Web-10b981?style=for-the-badge"/>
 </p>
 
@@ -14,8 +16,8 @@
 </p>
 
 <p align="center">
-  <a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FananTripathi-future%2FAdvanced-Audio-Steganography">
-    <img src="https://vercel.com/button" alt="Deploy with Vercel"/>
+  <a href="https://advanced-audio-steganography.vercel.app" target="_blank">
+    <img src="https://img.shields.io/badge/🌐%20Launch%20Live%20App-advanced--audio--steganography.vercel.app-3A8DFF?style=for-the-badge"/>
   </a>
 </p>
 
@@ -23,6 +25,8 @@
 
 # 🎧 Advanced Audio Steganography System
 ### *Developed at Supraja Technologies by Anant Tripathi*
+
+> 🚀 **Live Production Deployment:** [https://advanced-audio-steganography.vercel.app](https://advanced-audio-steganography.vercel.app)
 
 A military-grade security platform that inaudibly conceals AES-encrypted messages inside audio files using LSB steganography — fortified with a zero-trust two-way identity handshake protocol. Available both as a **cross-platform desktop application** and as a **cloud-native web application deployed on Vercel**.
 
@@ -32,7 +36,7 @@ A military-grade security platform that inaudibly conceals AES-encrypted message
 
 | Platform | Interface | Runtime | Access |
 | :--- | :--- | :--- | :--- |
-| **🌐 Web Cloud App** | Modern Glassmorphic Dark UI | Vercel Serverless (Python 3.x) + Web Audio | Instant browser access from any device |
+| **🌐 Web Cloud App** | Modern Glassmorphic Dark UI | Vercel Serverless (Python 3.x) + Web Audio | [🔗 Launch Web App](https://advanced-audio-steganography.vercel.app) |
 | **🖥️ Desktop App** | Dark-themed Tkinter GUI | Python Native + FFmpeg + Wave | Offline local processing on Windows/Linux/macOS |
 
 ---
@@ -99,14 +103,19 @@ Advanced-Audio-Steganography/
 
 ---
 
-## ☁️ Deploying to Vercel
+## ☁️ Production Deployment (Vercel)
 
-### Option 1: 1-Click Deploy via Vercel Dashboard (Recommended)
-1. Push your code to GitHub (already configured on `ananTripathi-future/Advanced-Audio-Steganography`).
-2. Go to [vercel.com/new](https://vercel.com/new).
-3. Import the `Advanced-Audio-Steganography` repository.
-4. Leave build settings as default (Vercel automatically detects `vercel.json` and `api/index.py`).
-5. Click **Deploy**. Your system is live in seconds!
+The cloud application is deployed and live in production:
+👉 **[https://advanced-audio-steganography.vercel.app](https://advanced-audio-steganography.vercel.app)**
+
+### Continuous Deployment via Git
+Any commit pushed to the `main` branch of this repository automatically triggers a zero-downtime production deployment on Vercel.
+
+### Deploying Your Own Instance
+1. Go to [vercel.com/new](https://vercel.com/new).
+2. Import the `Advanced-Audio-Steganography` repository.
+3. Leave build settings as default (Vercel automatically detects `vercel.json` and `api/index.py`).
+4. Click **Deploy**. Your system is live in seconds!
 
 ### Option 2: Deploy via Vercel CLI
 ```bash
